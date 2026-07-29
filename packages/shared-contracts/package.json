@@ -1,0 +1,17 @@
+{
+  "name": "@ff-converter/shared-contracts",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@ff-converter/shared-types": "1.0.0",
+    "typescript": "^5.4.5"
+  }
+}

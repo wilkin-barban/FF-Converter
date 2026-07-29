@@ -1,0 +1,47 @@
+name: Reportar un error
+description: Informe un comportamiento reproducible de FF-Converter.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Versión
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Sistema operativo
+      options:
+        - Windows 10/11 x64
+        - Ubuntu x64 (AppImage)
+        - Ubuntu/Debian x64 (DEB)
+        - Otro
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs relevantes sanitizados
+      render: shell
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmación
+      options:
+        - label: Revisé Diagnóstico y Consola Logs y eliminé información sensible.
+          required: true

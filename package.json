@@ -1,0 +1,48 @@
+{
+  "name": "ff-converter-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Cross-platform FFmpeg batch converter and desktop orchestrator",
+  "license": "MIT",
+  "author": "FF-Converter contributors",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/desktop",
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "package": "npm run package --workspace=apps/desktop",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run",
+    "verify": "npm run typecheck && npm run test:unit && npm run build",
+    "release:preflight": "node scripts/release-preflight.js",
+    "release:preflight:system": "node scripts/release-preflight.js --allow-system-ffmpeg",
+    "test:acceptance": "node scripts/acceptance-matrix.js",
+    "test:packaged": "node scripts/smoke-packaged.js"
+  },
+  "engines": {
+    "node": ">=20 <27"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "electron": "43.2.0"
+  },
+  "allowScripts": {
+    "electron@43.2.0": true,
+    "esbuild@0.21.5": true,
+    "better-sqlite3@13.0.1": true
+  },
+  "homepage": "https://github.com/wilkinbarban/FF-Converter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wilkinbarban/FF-Converter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wilkinbarban/FF-Converter/issues"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "license": "GPL-3.0-only",
+  "platforms": {
+    "win32-x64": {
+      "version": "8.1.2-essentials_build-www.gyan.dev",
+      "provider": "Gyan.dev",
+      "archiveUrl": "https://github.com/GyanD/codexffmpeg/releases/download/8.1.2/ffmpeg-8.1.2-essentials_build.zip",
+      "archiveSha256": "DB580001CAA24AC104C8CB856CD113A87B0A443F7BDF47D8C12B1D740584A2EC",
+      "sourceUrl": "https://github.com/FFmpeg/FFmpeg/commit/38b88335f9",
+      "buildScriptsUrl": "https://github.com/GyanD/codexffmpeg",
+      "files": {
+        "ffmpeg.exe": "1326DDE4C84FF1F96FE6B8916C5BED29E163E9B5DCCF995F6F3DB069D143EC5E",
+        "ffprobe.exe": "B49CCC7C6547B141AD5A2F6EC69CC04323D7133D7704D70B331B904C63EECB07"
+      }
+    },
+    "linux-x64": {
+      "version": "n8.1.2-31-g8c9502e9b0-20260726",
+      "provider": "BtbN",
+      "archiveUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n8.1-latest-linux64-gpl-8.1.tar.xz",
+      "archiveSha256": "019D2FC72F111ABB6D228C9C478900B77E4242EE454556F00144AA7777BC7DCD",
+      "sourceUrl": "https://github.com/FFmpeg/FFmpeg/commit/8c9502e9b0",
+      "buildScriptsUrl": "https://github.com/BtbN/FFmpeg-Builds",
+      "files": {
+        "ffmpeg": "7EE9C2FF37E2365941054C749E8DB9A93AC4F5600222FD1DE475415D1AA4E27A",
+        "ffprobe": "47DF6E0FD92E0ED8E21FF8844665E7C665AC197C26F7280DFFF76C3E559198ED"
+      }
+    }
+  }
+}

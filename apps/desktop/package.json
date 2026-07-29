@@ -1,0 +1,46 @@
+{
+  "name": "@ff-converter/desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Secure cross-platform FFmpeg batch converter",
+  "author": {
+    "name": "FF-Converter contributors",
+    "email": "noreply@ff-converter.local"
+  },
+  "homepage": "https://github.com/wilkinbarban/FF-Converter",
+  "desktopName": "FF Converter",
+  "license": "MIT",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "dev": "node dev-runner.js",
+    "build": "tsc -p tsconfig.main.json && vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.main.json && tsc --noEmit -p tsconfig.json",
+    "package": "electron-builder --config ../../electron-builder.yml",
+    "package:dir": "electron-builder --config ../../electron-builder.yml --dir -c.win.signAndEditExecutable=false"
+  },
+  "dependencies": {
+    "@ff-converter/media-core": "1.0.0",
+    "@ff-converter/preset-catalog": "1.0.0",
+    "@ff-converter/shared-contracts": "1.0.0",
+    "@ff-converter/shared-types": "1.0.0",
+    "better-sqlite3": "13.0.1",
+    "chokidar": "^3.6.0",
+    "lucide-react": "^0.378.0",
+    "pino": "^9.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.23.8",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "electron": "43.2.0",
+    "electron-builder": "26.15.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
+  }
+}
