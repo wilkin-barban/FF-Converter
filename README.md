@@ -94,7 +94,7 @@ npm run verify
 npm run dev
 ```
 
-Los binarios redistribuibles de FFmpeg no se guardan en Git por su tamaño. `resources/ffmpeg/manifest.json` conserva las versiones, URLs y hashes reproducibles. Consulte [DEVELOPMENT.md](DEVELOPMENT.md) y [RELEASE.md](RELEASE.md).
+Los binarios redistribuibles de FFmpeg no se guardan en Git por su tamaño. `resources/ffmpeg/manifest.json` conserva las versiones, URLs y hashes reproducibles. Consulte la [guía de desarrollo](doc/DEVELOPMENT.md) y la [guía de publicación](doc/RELEASE.md).
 
 ## Licencias
 

@@ -94,7 +94,7 @@ npm run verify
 npm run dev
 ```
 
-Redistributable FFmpeg binaries are excluded from Git because of their size. `resources/ffmpeg/manifest.json` records reproducible versions, URLs, and hashes. See [DEVELOPMENT.md](DEVELOPMENT.md) and [RELEASE.md](RELEASE.md).
+Redistributable FFmpeg binaries are excluded from Git because of their size. `resources/ffmpeg/manifest.json` records reproducible versions, URLs, and hashes. See the [development guide](doc/DEVELOPMENT.md) and the [release guide](doc/RELEASE.md).
 
 ## Licenses
 
