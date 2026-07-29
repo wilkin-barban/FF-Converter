@@ -86,7 +86,7 @@ Si algo falla, revise **Diagnóstico** y **Consola Logs** y luego abra una [issu
 
 ## Desarrollo
 
-Requisitos: Node.js 20–26, npm y FFmpeg/FFprobe para desarrollo.
+Requisitos: Node.js 22.12–26, npm y FFmpeg/FFprobe para desarrollo.
 
 ```bash
 npm ci

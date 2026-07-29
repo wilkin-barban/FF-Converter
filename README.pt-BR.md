@@ -86,7 +86,7 @@ Se algo falhar, consulte **Diagnóstico** e **Console de logs** e depois abra um
 
 ## Desenvolvimento
 
-Requisitos: Node.js 20–26, npm e FFmpeg/FFprobe para desenvolvimento.
+Requisitos: Node.js 22.12–26, npm e FFmpeg/FFprobe para desenvolvimento.
 
 ```bash
 npm ci

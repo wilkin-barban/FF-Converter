@@ -9,7 +9,7 @@ npm ci
 npm run verify
 ```
 
-Use Node.js 20–26. Para ejecutar la aplicación en desarrollo también necesita FFmpeg y FFprobe en `PATH`, o los binarios indicados en `resources/ffmpeg/manifest.json`.
+Use Node.js 22.12–26. Para ejecutar la aplicación en desarrollo también necesita FFmpeg y FFprobe en `PATH`, o los binarios indicados en `resources/ffmpeg/manifest.json`.
 
 ## Flujo
 

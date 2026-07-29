@@ -2,7 +2,7 @@
 
 ## Entorno soportado
 
-- Node.js 20 o superior.
+- Node.js 22.12 o superior, hasta la versión 26.
 - npm compatible con la versión instalada de Node.js.
 - Windows 11 o Ubuntu Linux.
 - FFmpeg y FFprobe disponibles en `PATH` durante la fase actual.
@@ -15,7 +15,7 @@ Línea base observada durante la auditoría del 2026-07-26:
 - npm `12.0.1`.
 - FFmpeg y FFprobe `8.1.2`.
 
-La aplicación debe continuar siendo compatible con Node.js 20, que es la versión mínima declarada. La versión de Node.js usada por Electron en producción es la incluida por Electron, no necesariamente la instalada globalmente.
+La aplicación requiere Node.js 22.12 como mínimo para ser coherente con Electron 43 y sus dependencias nativas. La versión de Node.js usada por Electron en producción es la incluida por Electron, no necesariamente la instalada globalmente.
 
 ## Instalación
 
