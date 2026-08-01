@@ -36,9 +36,9 @@ extraResources:
 win:
   executableName: FF-Converter
   icon: ../../build/icon.ico
-  publisherName: FF-Converter Personal Development
   signtoolOptions:
     certificateSubjectName: FF-Converter Personal Development
+    publisherName: FF-Converter Personal Development
     signingHashAlgorithms:
       - sha256
   requestedExecutionLevel: asInvoker
