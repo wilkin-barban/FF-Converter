@@ -54,7 +54,7 @@ jobs:
         shell: pwsh
         run: |
           if (-not $env:CSC_LINK -or -not $env:CSC_KEY_PASSWORD) { throw "Windows signing secrets are required" }
-          npm run package -- --publish onTagOrDraft
+          npm exec --workspace=apps/desktop -- electron-builder --config ../../electron-builder.yml --publish onTagOrDraft
       - uses: actions/upload-artifact@v6
         with:
           name: windows-release
@@ -99,7 +99,7 @@ jobs:
       - name: Build and publish Linux updater artifacts
         env:
           GH_TOKEN: ${{ github.token }}
-        run: npm run package -- --publish onTagOrDraft
+        run: npm exec --workspace=apps/desktop -- electron-builder --config ../../electron-builder.yml --publish onTagOrDraft
       - uses: actions/upload-artifact@v6
         with:
           name: linux-release
