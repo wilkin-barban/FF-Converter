@@ -8,6 +8,12 @@ buildDependenciesFromSource: false
 directories:
   output: ../../dist-app
   buildResources: ../../build
+
+publish:
+  provider: github
+  owner: wilkinbarban
+  repo: FF-Converter
+  releaseType: draft
 files:
   - dist/**/*
   - package.json
@@ -30,6 +36,7 @@ extraResources:
 win:
   executableName: FF-Converter
   icon: ../../build/icon.ico
+  publisherName: FF-Converter Personal Development
   signtoolOptions:
     certificateSubjectName: FF-Converter Personal Development
     signingHashAlgorithms:

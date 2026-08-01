@@ -1,4 +1,5 @@
-import { app, BrowserWindow, Menu, Notification, nativeImage } from 'electron';
+import { app, BrowserWindow, Menu, Notification, nativeImage, shell } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import { AppDatabase } from './database/db';
 import { QueueOrchestrator } from './services/queue-orchestrator';
@@ -9,12 +10,14 @@ import { SystemCapabilities } from '@ff-converter/shared-types';
 
 import { LoggerService } from './services/logger-service';
 import { FFmpegLocator } from './services/ffmpeg-locator';
+import { UpdateService } from './services/update-service';
 
 let mainWindow: BrowserWindow | null = null;
 let db: AppDatabase;
 let queueOrchestrator: QueueOrchestrator;
 let watchService: WatchService;
 let loggerService: LoggerService;
+let updateService: UpdateService;
 let cachedCapabilities: SystemCapabilities | null = null;
 const isSmokeTest = process.argv.includes('--smoke-test') || process.env.FF_CONVERTER_SMOKE_TEST === '1';
 app.setName('FF-Converter');
@@ -170,13 +173,26 @@ app.whenReady().then(async () => {
     mainWindow?.webContents.send('events:logs-cleared');
   });
 
+  updateService = new UpdateService({
+    updater: autoUpdater,
+    appVersion: app.getVersion(),
+    isPackaged: app.isPackaged && !isSmokeTest,
+    platform: process.platform,
+    isAppImage: Boolean(process.env.APPIMAGE),
+    openExternal: shell.openExternal,
+    emit: (channel, payload) => mainWindow?.webContents.send(channel, payload),
+    logger: loggerService,
+    releaseUrl: 'https://github.com/wilkinbarban/FF-Converter/releases/latest'
+  });
+
   setupIpcHandlers(
     db,
     queueOrchestrator,
     watchService,
     () => cachedCapabilities!,
     loggerService,
-    () => initCapabilities(true)
+    () => initCapabilities(true),
+    updateService
   );
 
   // Restore watchers
@@ -186,6 +202,7 @@ app.whenReady().then(async () => {
   }
 
   createWindow();
+  mainWindow?.webContents.once('did-finish-load', () => { void updateService.start(); });
   queueOrchestrator.processQueue();
 
   app.on('activate', () => {

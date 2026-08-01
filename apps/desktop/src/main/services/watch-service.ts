@@ -15,12 +15,23 @@ interface PendingWatchJob {
   rule: WatcherRule;
   filePath: string;
   fingerprint: string;
+  serviceGeneration: number;
+  ruleGeneration: number;
+  signature: string;
 }
 
 export class WatchService {
   private activeWatchers = new Map<string, ActiveWatcher>();
   private pendingFingerprints = new Set<string>();
   private pendingJobs = new Map<string, PendingWatchJob>();
+  private postActionRetries = new Map<string, number>();
+  private postActionRetryTimers = new Map<string, ReturnType<typeof setTimeout>>();
+  private postActionsInFlight = new Set<string>();
+  private serviceGeneration = 0;
+  private ruleGenerations = new Map<string, number>();
+  private stopped = false;
+  private static readonly MAX_POST_ACTION_RETRIES = 3;
+  private static readonly POST_ACTION_RETRY_DELAY_MS = 1_000;
 
   constructor(
     private queueOrchestrator: QueueOrchestrator,
@@ -33,10 +44,15 @@ export class WatchService {
   }
 
   public syncWatchers(rules: WatcherRule[]): void {
+    if (this.stopped) {
+      this.stopped = false;
+      this.serviceGeneration += 1;
+    }
     for (const [id, active] of this.activeWatchers.entries()) {
       const rule = rules.find(candidate => candidate.id === id);
       const signature = rule ? this.signature(rule) : '';
       if (!rule || !rule.enabled || active.signature !== signature) {
+        this.invalidateRulePendingJobs(id);
         void active.watcher.close();
         this.activeWatchers.delete(id);
         this.logger.info('Watcher', `Watcher detenido o actualizado: ${id}`);
@@ -74,7 +90,9 @@ export class WatchService {
   }
 
   private async handleAddedFile(rule: WatcherRule, filePath: string): Promise<void> {
-    if (filePath.includes('.ffconverter.partial') || this.isInside(rule.outputPath, filePath)) return;
+    const serviceGeneration = this.serviceGeneration;
+    const ruleGeneration = this.ruleGeneration(rule.id);
+    if (!this.isRuleActive(rule) || filePath.includes('.ffconverter.partial') || this.isInside(rule.outputPath, filePath)) return;
     if (rule.moveDestination && this.isInside(rule.moveDestination, filePath)) return;
 
     const ext = path.extname(filePath).toLowerCase();
@@ -105,7 +123,11 @@ export class WatchService {
         this.logger.info('Watcher', `Archivo marcado como procesado por pol√≠tica skip: ${filePath}`);
         return;
       }
-      this.pendingJobs.set(job.id, { rule, filePath, fingerprint });
+      if (!this.isRuleActive(rule) || serviceGeneration !== this.serviceGeneration || ruleGeneration !== this.ruleGeneration(rule.id)) {
+        this.pendingFingerprints.delete(fingerprint);
+        return;
+      }
+      this.pendingJobs.set(job.id, { rule, filePath, fingerprint, serviceGeneration, ruleGeneration, signature: this.signature(rule) });
     } catch (error: any) {
       if (fingerprint) this.pendingFingerprints.delete(fingerprint);
       this.logger.error('Watcher', `No fue posible encolar ${filePath}`, error.message);
@@ -116,16 +138,46 @@ export class WatchService {
     const pending = this.pendingJobs.get(job.id);
     if (!pending) return;
     if (job.status === 'COMPLETED') {
-      this.db.recordProcessedWatcherFile(pending.rule.id, pending.fingerprint, pending.filePath);
-      try {
-        await this.applyPostAction(pending);
-      } catch (error: any) {
-        this.logger.error('Watcher', `Fall√≥ la acci√≥n posterior para ${pending.filePath}`, error.message);
-      }
-      this.finishPending(job.id, pending.fingerprint);
+      await this.completePendingPostAction(job.id, pending);
     } else if (['FAILED', 'CANCELLED', 'SKIPPED'].includes(job.status)) {
       this.finishPending(job.id, pending.fingerprint);
     }
+  }
+
+  private async completePendingPostAction(jobId: string, pending: PendingWatchJob): Promise<void> {
+    if (!this.isPendingCurrent(pending) || this.postActionsInFlight.has(jobId) || this.postActionRetryTimers.has(jobId)) return;
+    this.postActionsInFlight.add(jobId);
+    try {
+      await this.applyPostAction(pending);
+      if (!this.isPendingCurrent(pending)) return;
+      this.db.recordProcessedWatcherFile(pending.rule.id, pending.fingerprint, pending.filePath);
+      this.finishPending(jobId, pending.fingerprint);
+    } catch (error: any) {
+      this.logger.error('Watcher', `FallÛ la acciÛn posterior para ${pending.filePath}`, error.message);
+      if (this.isPendingCurrent(pending)) this.schedulePostActionRetry(jobId, pending);
+    } finally {
+      this.postActionsInFlight.delete(jobId);
+    }
+  }
+
+  private schedulePostActionRetry(jobId: string, pending: PendingWatchJob): void {
+    if (!this.isPendingCurrent(pending) || this.postActionRetryTimers.has(jobId)) return;
+    const attempts = (this.postActionRetries.get(jobId) || 0) + 1;
+    if (attempts > WatchService.MAX_POST_ACTION_RETRIES) {
+      this.logger.error('Watcher', `AcciÛn posterior agotÛ reintentos: ${pending.filePath}`);
+      this.finishPending(jobId, pending.fingerprint);
+      return;
+    }
+
+    this.postActionRetries.set(jobId, attempts);
+    const delay = WatchService.POST_ACTION_RETRY_DELAY_MS * 2 ** (attempts - 1);
+    this.logger.warn('Watcher', `Reintentando acciÛn posterior (${attempts}/${WatchService.MAX_POST_ACTION_RETRIES}): ${pending.filePath}`);
+    const timer = setTimeout(() => {
+      this.postActionRetryTimers.delete(jobId);
+      const current = this.pendingJobs.get(jobId);
+      if (current && this.isPendingCurrent(current)) void this.completePendingPostAction(jobId, current);
+    }, delay);
+    this.postActionRetryTimers.set(jobId, timer);
   }
 
   private async applyPostAction(pending: PendingWatchJob): Promise<void> {
@@ -144,13 +196,7 @@ export class WatchService {
         this.logger.warn('Watcher', `Movimiento omitido porque el destino existe: ${filePath}`);
         return;
       }
-      try {
-        await fs.rename(filePath, destination);
-      } catch (error: any) {
-        if (error.code !== 'EXDEV') throw error;
-        await fs.copyFile(filePath, destination);
-        await fs.unlink(filePath);
-      }
+      await this.moveFile(filePath, destination, rule.duplicatePolicy === 'overwrite');
       this.logger.info('Watcher', `Original movido despu√©s de conversi√≥n validada`, `${filePath} -> ${destination}`);
     }
   }
@@ -161,10 +207,7 @@ export class WatchService {
     const initial = path.join(destinationFolder, parsed.base);
     if (!(await this.exists(initial))) return initial;
     if (rule.duplicatePolicy === 'skip') return null;
-    if (rule.duplicatePolicy === 'overwrite') {
-      await fs.unlink(initial);
-      return initial;
-    }
+    if (rule.duplicatePolicy === 'overwrite') return initial;
     let counter = 1;
     let candidate: string;
     do {
@@ -175,8 +218,78 @@ export class WatchService {
   }
 
   private finishPending(jobId: string, fingerprint: string): void {
+    const timer = this.postActionRetryTimers.get(jobId);
+    if (timer) clearTimeout(timer);
+    this.postActionRetryTimers.delete(jobId);
+    this.postActionRetries.delete(jobId);
     this.pendingJobs.delete(jobId);
     this.pendingFingerprints.delete(fingerprint);
+  }
+
+  private async moveFile(source: string, destination: string, overwrite: boolean): Promise<void> {
+    const backup = `${destination}.ffconverter-backup-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const destinationExists = overwrite && await this.exists(destination);
+    if (destinationExists) await fs.rename(destination, backup);
+
+    try {
+      await fs.rename(source, destination);
+    } catch (error: any) {
+      if (error.code === 'EXDEV') {
+        const staging = `${destination}.ffconverter-partial-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        let published = false;
+        try {
+          await fs.copyFile(source, staging);
+          await fs.rename(staging, destination);
+          published = true;
+          await fs.unlink(source);
+        } catch (copyError) {
+          await fs.unlink(staging).catch(() => undefined);
+          if (destinationExists) {
+            await this.restoreBackup(backup, destination);
+          } else if (published) {
+            await fs.unlink(destination).catch(() => undefined);
+          }
+          throw copyError;
+        }
+      } else {
+        if (destinationExists) await this.restoreBackup(backup, destination);
+        throw error;
+      }
+    }
+
+    if (destinationExists) {
+      await fs.unlink(backup).catch((error) => {
+        this.logger.warn('Watcher', `No fue posible eliminar el respaldo temporal: ${backup}`, error);
+      });
+    }
+  }
+
+  private async restoreBackup(backup: string, destination: string): Promise<void> {
+    if (await this.exists(destination)) await fs.unlink(destination);
+    await fs.rename(backup, destination);
+  }
+
+  private invalidateRulePendingJobs(ruleId: string): void {
+    this.ruleGenerations.set(ruleId, this.ruleGeneration(ruleId) + 1);
+    for (const [jobId, pending] of this.pendingJobs.entries()) {
+      if (pending.rule.id === ruleId) this.finishPending(jobId, pending.fingerprint);
+    }
+  }
+
+  private isRuleActive(rule: WatcherRule): boolean {
+    return !this.stopped && this.activeWatchers.get(rule.id)?.signature === this.signature(rule);
+  }
+
+  private ruleGeneration(ruleId: string): number {
+    return this.ruleGenerations.get(ruleId) || 0;
+  }
+
+  private isPendingCurrent(pending: PendingWatchJob): boolean {
+    const serviceMatches = pending.serviceGeneration === undefined || pending.serviceGeneration === this.serviceGeneration;
+    const ruleMatches = pending.ruleGeneration === undefined || pending.ruleGeneration === this.ruleGeneration(pending.rule.id);
+    const signatureMatches = pending.signature === undefined
+      || this.activeWatchers.get(pending.rule.id)?.signature === pending.signature;
+    return !this.stopped && serviceMatches && ruleMatches && signatureMatches;
   }
 
   private fingerprint(ruleId: string, filePath: string, size: number, mtimeMs: number): string {
@@ -218,6 +331,12 @@ export class WatchService {
   }
 
   public stopAll(): void {
+    this.stopped = true;
+    this.serviceGeneration += 1;
+    for (const [jobId, pending] of this.pendingJobs.entries()) this.finishPending(jobId, pending.fingerprint);
+    for (const timer of this.postActionRetryTimers.values()) clearTimeout(timer);
+    this.postActionRetryTimers.clear();
+    this.postActionRetries.clear();
     for (const active of this.activeWatchers.values()) void active.watcher.close();
     this.activeWatchers.clear();
     this.logger.info('Watcher', 'Todos los watchers fueron detenidos.');

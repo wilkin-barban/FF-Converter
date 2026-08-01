@@ -59,6 +59,7 @@ async function expandMediaPaths(inputPaths: string[]): Promise<string[]> {
 }
 
 import { LoggerService } from '../services/logger-service';
+import { UpdateService } from '../services/update-service';
 
 export function setupIpcHandlers(
   db: AppDatabase,
@@ -66,7 +67,8 @@ export function setupIpcHandlers(
   watchService: WatchService,
   getCapabilities: () => SystemCapabilities,
   loggerService: LoggerService,
-  refreshCapabilities: () => Promise<SystemCapabilities>
+  refreshCapabilities: () => Promise<SystemCapabilities>,
+  updateService: UpdateService
 ) {
   const pathAccess = new PathAccessRegistry();
   const inspectionCache = new Map<string, any>();
@@ -317,6 +319,17 @@ export function setupIpcHandlers(
     const capabilities = await refreshCapabilities();
     event.sender.send('events:capabilities-updated', capabilities);
     return settings;
+  });
+
+  // --- Updates ---
+  secureHandle('updates:downloadOrOpenRelease', async () => {
+    await updateService.downloadOrOpenRelease();
+    return true;
+  });
+
+  secureHandle('updates:install', async () => {
+    updateService.install();
+    return true;
   });
 
   // --- System & Hardware ---

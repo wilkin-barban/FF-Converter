@@ -40,6 +40,10 @@ const ffConverterAPI = {
     save: (input: Partial<WatcherRule>): Promise<WatcherRule> => ipcRenderer.invoke('watchers:save', input),
     remove: (id: string): Promise<boolean> => ipcRenderer.invoke('watchers:remove', id),
   },
+  updates: {
+    downloadOrOpenRelease: (): Promise<boolean> => ipcRenderer.invoke('updates:downloadOrOpenRelease'),
+    install: (): Promise<boolean> => ipcRenderer.invoke('updates:install'),
+  },
   settings: {
     get: (): Promise<AppSettings> => ipcRenderer.invoke('settings:get'),
     save: (input: Partial<AppSettings>): Promise<AppSettings> => ipcRenderer.invoke('settings:save', input),
@@ -81,6 +85,26 @@ const ffConverterAPI = {
       const listener = (_: IpcRendererEvent, capabilities: SystemCapabilities) => callback(capabilities);
       ipcRenderer.on('events:capabilities-updated', listener);
       return () => ipcRenderer.removeListener('events:capabilities-updated', listener);
+    },
+    onUpdateAvailable: (callback: (payload: { version: string; releaseNotes?: string; action: 'download' | 'open-release' }) => void) => {
+      const listener = (_: IpcRendererEvent, payload: { version: string; releaseNotes?: string; action: 'download' | 'open-release' }) => callback(payload);
+      ipcRenderer.on('events:update-available', listener);
+      return () => ipcRenderer.removeListener('events:update-available', listener);
+    },
+    onUpdateProgress: (callback: (payload: { percent: number }) => void) => {
+      const listener = (_: IpcRendererEvent, payload: { percent: number }) => callback(payload);
+      ipcRenderer.on('events:update-progress', listener);
+      return () => ipcRenderer.removeListener('events:update-progress', listener);
+    },
+    onUpdateDownloaded: (callback: () => void) => {
+      const listener = () => callback();
+      ipcRenderer.on('events:update-downloaded', listener);
+      return () => ipcRenderer.removeListener('events:update-downloaded', listener);
+    },
+    onUpdateError: (callback: () => void) => {
+      const listener = () => callback();
+      ipcRenderer.on('events:update-error', listener);
+      return () => ipcRenderer.removeListener('events:update-error', listener);
     },
     onLogsCleared: (callback: () => void) => {
       const listener = () => callback();

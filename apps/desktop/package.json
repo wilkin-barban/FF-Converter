@@ -1,6 +1,6 @@
 {
   "name": "@ff-converter/desktop",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Secure cross-platform FFmpeg batch converter",
   "author": {
@@ -25,6 +25,7 @@
     "@ff-converter/shared-types": "1.0.0",
     "better-sqlite3": "13.0.1",
     "chokidar": "^3.6.0",
+    "electron-updater": "^6.8.9",
     "lucide-react": "^0.378.0",
     "pino": "^9.0.0",
     "react": "^18.3.1",

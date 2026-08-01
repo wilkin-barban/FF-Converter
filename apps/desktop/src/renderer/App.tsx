@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppStore } from './stores/appStore';
 import { Sidebar } from './components/Sidebar';
 import { ConvertView } from './components/ConvertView';
@@ -11,6 +11,7 @@ import { LogsView } from './components/LogsView';
 import { SettingsView } from './components/SettingsView';
 import { getErrorMessage } from './utils/errors';
 import { useLiveInterfaceLanguage } from './utils/i18n';
+import { UpdateDialog, UpdateDialogState } from './components/UpdateDialog';
 
 export const App: React.FC = () => {
   const {
@@ -31,6 +32,7 @@ export const App: React.FC = () => {
     settings
   } = useAppStore();
   useLiveInterfaceLanguage(settings?.language ?? 'es');
+  const [update, setUpdate] = useState<UpdateDialogState | null>(null);
 
   useEffect(() => {
     const api = window.ffConverter;
@@ -66,6 +68,10 @@ export const App: React.FC = () => {
     });
     const unsubCapabilities = api.events.onCapabilitiesUpdated(setCapabilities);
     const unsubLogsCleared = api.events.onLogsCleared(() => setLogs([]));
+    const unsubUpdateAvailable = api.events.onUpdateAvailable((payload) => setUpdate({ ...payload, phase: 'available' }));
+    const unsubUpdateProgress = api.events.onUpdateProgress(({ percent }) => setUpdate((current) => current ? { ...current, phase: 'downloading', percent } : current));
+    const unsubUpdateDownloaded = api.events.onUpdateDownloaded(() => setUpdate((current) => current ? { ...current, phase: 'downloaded' } : current));
+    const unsubUpdateError = api.events.onUpdateError(() => setUpdate((current) => current ? { ...current, phase: 'error' } : current));
 
     // Window-level Drag and Drop handling for entire application
     const handleWindowDragOver = (e: DragEvent) => {
@@ -161,6 +167,10 @@ export const App: React.FC = () => {
       if (unsubLogs) unsubLogs();
       if (unsubCapabilities) unsubCapabilities();
       if (unsubLogsCleared) unsubLogsCleared();
+      if (unsubUpdateAvailable) unsubUpdateAvailable();
+      if (unsubUpdateProgress) unsubUpdateProgress();
+      if (unsubUpdateDownloaded) unsubUpdateDownloaded();
+      if (unsubUpdateError) unsubUpdateError();
     };
   }, []);
 
@@ -198,6 +208,26 @@ export const App: React.FC = () => {
         {activeTab === 'diagnostics' && <DiagnosticsView />}
         {activeTab === 'logs' && <LogsView />}
         {activeTab === 'settings' && <SettingsView />}
+        {update && (
+          <UpdateDialog
+            state={update}
+            onConfirm={() => {
+              if (update.action === 'open-release') {
+                setUpdate(null);
+                void window.ffConverter.updates.downloadOrOpenRelease();
+                return;
+              }
+              setUpdate((current) =>
+                current ? { ...current, phase: 'downloading', percent: 0 } : current,
+              );
+              void window.ffConverter.updates.downloadOrOpenRelease();
+            }}
+            onDismiss={() => setUpdate(null)}
+            onRestart={() => {
+              void window.ffConverter.updates.install();
+            }}
+          />
+        )}
       </main>
     </div>
   );

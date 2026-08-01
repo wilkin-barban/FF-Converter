@@ -12,9 +12,9 @@
 
 | System | Recommended file |
 |---|---|
-| Windows 10/11 x64 | `FF-Converter-1.0.0-setup-x64.exe` |
-| Ubuntu x64, portable | `FF-Converter-1.0.0-x86_64.AppImage` |
-| Ubuntu/Debian x64 | `FF-Converter-1.0.0-amd64.deb` |
+| Windows 10/11 x64 | `FF-Converter-1.1.0-setup-x64.exe` |
+| Ubuntu x64, portable | `FF-Converter-1.1.0-x86_64.AppImage` |
+| Ubuntu/Debian x64 | `FF-Converter-1.1.0-amd64.deb` |
 
 FFmpeg and FFprobe are bundled. You do not need to install them separately.
 
@@ -33,8 +33,8 @@ This personal release uses a self-signed certificate. The signature protects fil
 Allow the file to run as a program in its properties, or use:
 
 ```bash
-chmod +x FF-Converter-1.0.0-x86_64.AppImage
-./FF-Converter-1.0.0-x86_64.AppImage
+chmod +x FF-Converter-1.1.0-x86_64.AppImage
+./FF-Converter-1.1.0-x86_64.AppImage
 ```
 
 ### DEB package
@@ -42,7 +42,7 @@ chmod +x FF-Converter-1.0.0-x86_64.AppImage
 Open the `.deb` with the software installer or run:
 
 ```bash
-sudo apt install ./FF-Converter-1.0.0-amd64.deb
+sudo apt install ./FF-Converter-1.1.0-amd64.deb
 ```
 
 ## First conversion
@@ -69,11 +69,11 @@ Hardware acceleration depends on the GPU, drivers, and detected encoders. When a
 Every release includes `SHA256SUMS.txt`.
 
 ```powershell
-Get-FileHash .\FF-Converter-1.0.0-setup-x64.exe -Algorithm SHA256
+Get-FileHash .\FF-Converter-1.1.0-setup-x64.exe -Algorithm SHA256
 ```
 
 ```bash
-sha256sum FF-Converter-1.0.0-x86_64.AppImage
+sha256sum FF-Converter-1.1.0-x86_64.AppImage
 ```
 
 Compare the result with the published checksum.
@@ -103,3 +103,7 @@ FF-Converter source code is licensed under [MIT](LICENSE). The separate bundled 
 - [Contributing guide](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Changelog](CHANGELOG.md)
+
+## Updates
+
+The app checks for updates in the background after startup. Windows and AppImage ask before downloading and restarting; DEB packages open the official releases page for manual installation.

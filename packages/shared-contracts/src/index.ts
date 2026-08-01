@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+const SafeCustomFFmpegOptionValues: Record<string, ReadonlySet<string>> = {
+  '-tune': new Set(['film', 'animation', 'grain', 'stillimage', 'psnr', 'ssim', 'fastdecode', 'zerolatency']),
+  '-movflags': new Set(['+faststart', '+frag_keyframe', '+empty_moov', '+default_base_moof'])
+};
+
 export const EntityIdSchema = z.string().min(1).max(200).regex(/^[a-zA-Z0-9._:-]+$/);
 
 export const AbsolutePathSchema = z.string()
@@ -58,19 +63,19 @@ export const PresetSchema = z.object({
   customFFmpegFlags: z.array(z.string().min(1).max(256)).max(32).optional()
     .superRefine((args, context) => {
       if (!args) return;
-      const forbidden = new Set([
-        '-i', '-y', '-n', '-progress', '-report', '-filter_script',
-        '-filter_complex_script', '-attach', '-dump_attachment'
-      ]);
-      args.forEach((arg, index) => {
-        if (forbidden.has(arg.toLowerCase()) || arg.includes('://') || arg.includes('\0')) {
+      for (let index = 0; index < args.length; index += 2) {
+        const option = args[index];
+        const value = args[index + 1];
+        const allowedValues = SafeCustomFFmpegOptionValues[option];
+        if (!allowedValues || value === undefined || !allowedValues.has(value)) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            message: `Unsafe custom FFmpeg argument: ${arg}`,
+            message: `Unsupported custom FFmpeg option or value: ${option}`,
             path: [index]
           });
+          if (value === undefined) continue;
         }
-      });
+      }
     }),
 });
 

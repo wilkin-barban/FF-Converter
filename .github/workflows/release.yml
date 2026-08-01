@@ -1,0 +1,140 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - name: Verify tag matches package version
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          if ("v$version" -ne "${{ github.ref_name }}") { throw "Tag does not match package version v$version" }
+      - name: Provision verified bundled FFmpeg
+        shell: pwsh
+        run: |
+          $manifest = Get-Content resources/ffmpeg/manifest.json | ConvertFrom-Json
+          $platform = $manifest.platforms.'win32-x64'
+          Invoke-WebRequest -Uri $platform.archiveUrl -OutFile ffmpeg.zip
+          if ((Get-FileHash ffmpeg.zip -Algorithm SHA256).Hash -ne $platform.archiveSha256) { throw "Archive checksum mismatch" }
+          Expand-Archive ffmpeg.zip -DestinationPath ffmpeg-extracted
+          New-Item -ItemType Directory -Force resources/ffmpeg/win32-x64 | Out-Null
+          Copy-Item (Get-ChildItem ffmpeg-extracted -Recurse -Filter ffmpeg.exe | Select-Object -First 1).FullName resources/ffmpeg/win32-x64/ffmpeg.exe
+          Copy-Item (Get-ChildItem ffmpeg-extracted -Recurse -Filter ffprobe.exe | Select-Object -First 1).FullName resources/ffmpeg/win32-x64/ffprobe.exe
+          if ((Get-FileHash resources/ffmpeg/win32-x64/ffmpeg.exe -Algorithm SHA256).Hash -ne $platform.files.'ffmpeg.exe') { throw "ffmpeg.exe checksum mismatch" }
+          if ((Get-FileHash resources/ffmpeg/win32-x64/ffprobe.exe -Algorithm SHA256).Hash -ne $platform.files.'ffprobe.exe') { throw "ffprobe.exe checksum mismatch" }
+      - run: npm ci
+      - run: npm run verify
+      - run: npm run release:preflight
+      - name: Build and publish Windows updater artifacts
+        env:
+          CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          if (-not $env:CSC_LINK -or -not $env:CSC_KEY_PASSWORD) { throw "Windows signing secrets are required" }
+          npm run package -- --publish onTagOrDraft
+      - uses: actions/upload-artifact@v6
+        with:
+          name: windows-release
+          if-no-files-found: error
+          path: |
+            dist-app/*.exe
+            dist-app/*.yml
+            dist-app/*.blockmap
+
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - name: Verify tag matches package version
+        if: github.ref_type == 'tag'
+        run: test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}"
+      - name: Provision verified bundled FFmpeg
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="$(node -p "require('./resources/ffmpeg/manifest.json').platforms['linux-x64'].archiveUrl")"
+          archive_sha="$(node -p "require('./resources/ffmpeg/manifest.json').platforms['linux-x64'].archiveSha256.toLowerCase()")"
+          curl --fail --location "$url" --output ffmpeg.tar.xz
+          echo "$archive_sha  ffmpeg.tar.xz" | sha256sum --check -
+          mkdir -p ffmpeg-extracted resources/ffmpeg/linux-x64
+          tar -xf ffmpeg.tar.xz -C ffmpeg-extracted
+          cp "$(find ffmpeg-extracted -type f -path '*/bin/ffmpeg' -print -quit)" resources/ffmpeg/linux-x64/ffmpeg
+          cp "$(find ffmpeg-extracted -type f -path '*/bin/ffprobe' -print -quit)" resources/ffmpeg/linux-x64/ffprobe
+          chmod +x resources/ffmpeg/linux-x64/ffmpeg resources/ffmpeg/linux-x64/ffprobe
+          echo "$(node -p "require('./resources/ffmpeg/manifest.json').platforms['linux-x64'].files.ffmpeg.toLowerCase()")  resources/ffmpeg/linux-x64/ffmpeg" | sha256sum --check -
+          echo "$(node -p "require('./resources/ffmpeg/manifest.json').platforms['linux-x64'].files.ffprobe.toLowerCase()")  resources/ffmpeg/linux-x64/ffprobe" | sha256sum --check -
+      - run: npm ci
+      - run: npm run verify
+      - run: npm run release:preflight
+      - name: Build and publish Linux updater artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npm run package -- --publish onTagOrDraft
+      - uses: actions/upload-artifact@v6
+        with:
+          name: linux-release
+          if-no-files-found: error
+          path: |
+            dist-app/*.AppImage
+            dist-app/*.deb
+            dist-app/*.yml
+            dist-app/*.blockmap
+            dist-app/*.zsync
+
+  publish:
+    if: github.ref_type == 'tag'
+    needs: [windows, linux]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v7
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Finalize GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          notes="doc/RELEASE_NOTES_${GITHUB_REF_NAME}.md"
+          gh release upload "${GITHUB_REF_NAME}" release-assets/* --repo "${GITHUB_REPOSITORY}" --clobber
+          if [[ -f "$notes" ]]; then
+            gh release edit "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --title "FF-Converter ${GITHUB_REF_NAME}" --notes-file "$notes" --draft=false --latest
+          else
+            gh release edit "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --title "FF-Converter ${GITHUB_REF_NAME}" --draft=false --latest
+          fi
+

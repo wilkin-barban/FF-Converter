@@ -12,9 +12,9 @@ Español · [English](README.en.md) · [Português do Brasil](README.pt-BR.md)
 
 | Sistema | Archivo recomendado |
 |---|---|
-| Windows 10/11 x64 | `FF-Converter-1.0.0-setup-x64.exe` |
-| Ubuntu x64, portátil | `FF-Converter-1.0.0-x86_64.AppImage` |
-| Ubuntu/Debian x64 | `FF-Converter-1.0.0-amd64.deb` |
+| Windows 10/11 x64 | `FF-Converter-1.1.0-setup-x64.exe` |
+| Ubuntu x64, portátil | `FF-Converter-1.1.0-x86_64.AppImage` |
+| Ubuntu/Debian x64 | `FF-Converter-1.1.0-amd64.deb` |
 
 FFmpeg y FFprobe ya están incluidos. No es necesario instalarlos por separado.
 
@@ -33,8 +33,8 @@ Esta versión personal utiliza un certificado autofirmado. La firma protege la i
 En las propiedades del archivo, habilite **Ejecutar como programa**, o use:
 
 ```bash
-chmod +x FF-Converter-1.0.0-x86_64.AppImage
-./FF-Converter-1.0.0-x86_64.AppImage
+chmod +x FF-Converter-1.1.0-x86_64.AppImage
+./FF-Converter-1.1.0-x86_64.AppImage
 ```
 
 ### Paquete DEB
@@ -42,7 +42,7 @@ chmod +x FF-Converter-1.0.0-x86_64.AppImage
 Abra el `.deb` con el instalador de aplicaciones o ejecute:
 
 ```bash
-sudo apt install ./FF-Converter-1.0.0-amd64.deb
+sudo apt install ./FF-Converter-1.1.0-amd64.deb
 ```
 
 ## Primera conversión
@@ -69,11 +69,11 @@ La aceleración depende de la GPU, sus controladores y los codificadores detecta
 Cada release incluye `SHA256SUMS.txt`.
 
 ```powershell
-Get-FileHash .\FF-Converter-1.0.0-setup-x64.exe -Algorithm SHA256
+Get-FileHash .\FF-Converter-1.1.0-setup-x64.exe -Algorithm SHA256
 ```
 
 ```bash
-sha256sum FF-Converter-1.0.0-x86_64.AppImage
+sha256sum FF-Converter-1.1.0-x86_64.AppImage
 ```
 
 Compare el resultado con el valor publicado.
@@ -103,3 +103,7 @@ El código de FF-Converter se publica bajo [MIT](LICENSE). Los ejecutables separ
 - [Guía de contribución](CONTRIBUTING.md)
 - [Política de seguridad](SECURITY.md)
 - [Historial de cambios](CHANGELOG.md)
+
+## Actualizaciones
+
+La aplicación consulta actualizaciones en segundo plano una vez iniciada. Windows y AppImage piden confirmación antes de descargar y reiniciar; los paquetes DEB abren la página oficial de releases para una instalación manual.

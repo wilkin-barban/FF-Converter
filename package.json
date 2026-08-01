@@ -1,7 +1,7 @@
 {
   "name": "ff-converter-monorepo",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cross-platform FFmpeg batch converter and desktop orchestrator",
   "license": "MIT",
   "author": "FF-Converter contributors",
