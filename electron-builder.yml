@@ -37,7 +37,6 @@ win:
   executableName: FF-Converter
   icon: ../../build/icon.ico
   signtoolOptions:
-    certificateSubjectName: FF-Converter Personal Development
     publisherName: FF-Converter Personal Development
     signingHashAlgorithms:
       - sha256
