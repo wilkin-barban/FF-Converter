@@ -7,11 +7,13 @@
 - Repositorio migrado a https://github.com/wilkin-barban/FF-Converter.
 - Actualizadas las URL de actualizaciones, descargas, issues, seguridad y metadatos del proyecto.
 - Actualizado el flujo de publicación y la documentación para el repositorio nuevo.
+- Assets de la release reconstruidos por CI y firmados con el certificado CI exportable.
 - Sin cambios funcionales respecto de 1.1.0.
 
 ### Actualización
 
 - Las instalaciones de 1.1.0 deben descargar 1.1.1 manualmente una vez porque su actualizador apuntaba al repositorio anterior.
+- Si ya se descargó la build inicial de 1.1.1, volver a descargar los assets para obtener la build CI firmada con E166.
 - Windows: `FF-Converter-1.1.1-setup-x64.exe`.
 - Ubuntu AppImage: `FF-Converter-1.1.1-x86_64.AppImage`.
 - Ubuntu/Debian DEB: `FF-Converter-1.1.1-amd64.deb`.

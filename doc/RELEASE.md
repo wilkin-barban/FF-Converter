@@ -23,7 +23,7 @@ scripts/package-linux-wsl.sh <ruta-del-proyecto> <destino-de-artefactos>
 
 ## Publicación por CI
 
-El workflow `Release` se dispara con tags `v*`. La firma de Windows en GitHub Actions usa los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`, ya configurados con el certificado CI exportable (`build/certificates/FF-Converter-Personal-Development-CI.cer`). Si los secretos faltan, los artefactos de Windows se generan sin firma. La release `v1.1.1` se firmó localmente con el certificado no exportable `12A84C...`; las releases futuras construidas por CI usan el certificado CI `E166...`.
+El workflow `Release` se dispara con tags `v*`. La firma de Windows en GitHub Actions usa los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`, ya configurados con el certificado CI exportable (`build/certificates/FF-Converter-Personal-Development-CI.cer`). Si los secretos faltan, los artefactos de Windows se generan sin firma. La release `v1.1.1` fue reconstruida y re-firmada con el certificado CI `E166...`; las releases futuras construidas por CI también usan ese certificado.
 
 
 ## Flujo reproducible

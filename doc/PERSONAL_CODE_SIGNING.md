@@ -64,7 +64,7 @@ GitHub Actions usa un segundo certificado con el mismo sujeto, creado con clave 
 - Copia pública: `build/certificates/FF-Converter-Personal-Development-CI.cer`
 - Secretos configurados en el repositorio: `WIN_CSC_LINK` (PFX en base64) y `WIN_CSC_KEY_PASSWORD`.
 
-El workflow `Release` firma con este certificado cuando los secretos están presentes. Las builds locales siguen usando el certificado `12A84C...` del almacén personal. La release `v1.1.1` quedó firmada con el certificado local; las releases futuras construidas por CI usarán el certificado CI.
+El workflow `Release` firma con este certificado cuando los secretos están presentes. Las builds locales siguen usando el certificado `12A84C...` del almacén personal. La release `v1.1.1` fue reconstruida y re-firmada con el certificado CI `E166...`; el certificado local `12A84C...` firmó la build inicial y se conserva como referencia histórica. Las releases futuras también usan el certificado CI.
 
 Para confiar en el certificado CI en un equipo Windows, importar el `.cer` en `TrustedPublisher` y, si se requiere confianza de cadena, en `Root`. En este equipo ya está importado en `TrustedPublisher`.
 

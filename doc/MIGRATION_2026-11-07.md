@@ -14,7 +14,7 @@
 - `electron-builder.yml` publica contra `wilkin-barban/FF-Converter`.
 - READMEs en español, inglés y portugués actualizados a los artefactos `1.1.1`.
 - Workflow de release y documentación adaptados al repositorio nuevo.
-- Release `v1.1.1` publicada con instaladores, metadatos de actualización y checksums.
+- Release `v1.1.1` publicada con instaladores, metadatos de actualización y checksums; los assets finales fueron reconstruidos por CI y re-firmados con el certificado CI exportable.
 - Etiqueta `v1.1.0` conservada para mantener el historial.
 
 ## Impacto para usuarios
@@ -47,7 +47,7 @@ scripts/package-linux-wsl.sh /mnt/c/Users/wilki/proyectos/FF-Converter /mnt/c/Us
 
 ### Publicación por CI
 
-El workflow `Release` se dispara con tags `v*`. La firma de Windows en CI usa los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`, configurados con el certificado CI exportable `E1662767...` (`build/certificates/FF-Converter-Personal-Development-CI.cer`). La release `v1.1.1` se firmó localmente con el certificado no exportable `12A84C...`; las releases futuras construidas por CI usan el certificado CI.
+El workflow `Release` se dispara con tags `v*`. La firma de Windows en CI usa los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`, configurados con el certificado CI exportable `E1662767...` (`build/certificates/FF-Converter-Personal-Development-CI.cer`). La release `v1.1.1` fue reconstruida y re-firmada con el certificado CI `E166...`; el certificado local `12A84C...` firmó la build inicial y se conserva como referencia histórica. Las releases futuras construidas por CI también usan el certificado CI.
 
 ## Verificación
 
