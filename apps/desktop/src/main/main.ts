@@ -182,7 +182,7 @@ app.whenReady().then(async () => {
     openExternal: shell.openExternal,
     emit: (channel, payload) => mainWindow?.webContents.send(channel, payload),
     logger: loggerService,
-    releaseUrl: 'https://github.com/wilkinbarban/FF-Converter/releases/latest'
+    releaseUrl: 'https://github.com/wilkin-barban/FF-Converter/releases/latest'
   });
 
   setupIpcHandlers(

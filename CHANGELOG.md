@@ -1,6 +1,35 @@
 # Historial de cambios
 
-## [1.0.0] - 2026-07-29
+## 1.1.1 - 2026-11-07
+
+### Cambiado
+
+- Repositorio migrado a https://github.com/wilkin-barban/FF-Converter.
+- Actualizadas las URL de actualizaciones, descargas, issues, seguridad y metadatos del proyecto.
+- Actualizado el flujo de publicación y la documentación para el repositorio nuevo.
+- Sin cambios funcionales respecto de 1.1.0.
+
+### Actualización
+
+- Las instalaciones de 1.1.0 deben descargar 1.1.1 manualmente una vez porque su actualizador apuntaba al repositorio anterior.
+- Windows: `FF-Converter-1.1.1-setup-x64.exe`.
+- Ubuntu AppImage: `FF-Converter-1.1.1-x86_64.AppImage`.
+- Ubuntu/Debian DEB: `FF-Converter-1.1.1-amd64.deb`.
+
+## 1.1.0 - 2026-07-29
+
+### Añadido
+
+- Actualizador de GitHub Releases para Windows y AppImage: no revisa durante desarrollo, no descarga sin confirmación y muestra progreso y reinicio cuando corresponde.
+- Reglas de carpetas vigiladas más fiables: los post-procesos fallidos tienen reintentos acotados, se cancelan al desactivar o cambiar una regla y no se duplican.
+- Validación más estricta de flags FFmpeg personalizados para rechazar argumentos no permitidos.
+
+### Seguridad y estabilidad
+
+- Actualizaciones con confirmación explícita y verificación de integridad.
+- Mejoras de recuperación y control de concurrencia en trabajos y watchers.
+
+## 1.0.0 - 2026-07-29
 
 ### Añadido
 
@@ -19,5 +48,3 @@
 - Validación de salidas antes de completar trabajos.
 - Recuperación de trabajos interrumpidos y control de concurrencia.
 - Sanitización, persistencia y rotación limitada de logs.
-
-[1.0.0]: https://github.com/wilkinbarban/FF-Converter/releases/tag/v1.0.0

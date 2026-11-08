@@ -1,13 +1,13 @@
 {
   "name": "@ff-converter/desktop",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Secure cross-platform FFmpeg batch converter",
   "author": {
     "name": "FF-Converter contributors",
     "email": "noreply@ff-converter.local"
   },
-  "homepage": "https://github.com/wilkinbarban/FF-Converter",
+  "homepage": "https://github.com/wilkin-barban/FF-Converter",
   "desktopName": "FF Converter",
   "license": "MIT",
   "main": "dist/main/main.js",

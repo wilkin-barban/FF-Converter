@@ -20,7 +20,9 @@ CA pública. Nunca se debe presentar esta firma como confianza pública.
 ## Empaquetar
 
 La configuración `win.signtoolOptions.certificateSubjectName` de
-`electron-builder.yml` selecciona el certificado desde el almacén personal:
+`electron-builder.yml` selecciona el certificado desde el almacén personal.
+`certificateSha1` fija el thumbprint documentado para evitar otro certificado
+con el mismo sujeto, y `publisherName` establece el nombre del editor:
 
 ```powershell
 npm run package --workspace=apps/desktop
@@ -51,3 +53,7 @@ Remove-Item "Cert:\CurrentUser\My\$thumbprint"
 
 Al eliminar `CurrentUser\My` se destruye la única clave privada y las futuras
 versiones no podrán firmarse con esta misma identidad.
+
+## Integración continua
+
+La clave privada de este certificado es no exportable. Para que GitHub Actions firme instaladores, el repositorio debe tener los secretos `WIN_CSC_LINK` (PFX en base64) y `WIN_CSC_KEY_PASSWORD`. Si faltan, el workflow genera artefactos sin firma y no se deben presentar como firmados.

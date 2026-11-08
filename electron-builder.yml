@@ -11,7 +11,7 @@ directories:
 
 publish:
   provider: github
-  owner: wilkinbarban
+  owner: wilkin-barban
   repo: FF-Converter
   releaseType: draft
 files:
@@ -37,6 +37,8 @@ win:
   executableName: FF-Converter
   icon: ../../build/icon.ico
   signtoolOptions:
+    certificateSubjectName: FF-Converter Personal Development
+    certificateSha1: 12A84C6886FB1EAABB20BC2EA7074C7027599B75
     publisherName: FF-Converter Personal Development
     signingHashAlgorithms:
       - sha256

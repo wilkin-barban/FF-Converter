@@ -8,13 +8,13 @@ Español · [English](README.en.md) · [Português do Brasil](README.pt-BR.md)
 
 ## Descargar
 
-**[Abrir la versión más reciente](https://github.com/wilkinbarban/FF-Converter/releases/latest)**
+**[Abrir la versión más reciente](https://github.com/wilkin-barban/FF-Converter/releases/latest)**
 
 | Sistema | Archivo recomendado |
 |---|---|
-| Windows 10/11 x64 | `FF-Converter-1.1.0-setup-x64.exe` |
-| Ubuntu x64, portátil | `FF-Converter-1.1.0-x86_64.AppImage` |
-| Ubuntu/Debian x64 | `FF-Converter-1.1.0-amd64.deb` |
+| Windows 10/11 x64 | `FF-Converter-1.1.1-setup-x64.exe` |
+| Ubuntu x64, portátil | `FF-Converter-1.1.1-x86_64.AppImage` |
+| Ubuntu/Debian x64 | `FF-Converter-1.1.1-amd64.deb` |
 
 FFmpeg y FFprobe ya están incluidos. No es necesario instalarlos por separado.
 
@@ -33,8 +33,8 @@ Esta versión personal utiliza un certificado autofirmado. La firma protege la i
 En las propiedades del archivo, habilite **Ejecutar como programa**, o use:
 
 ```bash
-chmod +x FF-Converter-1.1.0-x86_64.AppImage
-./FF-Converter-1.1.0-x86_64.AppImage
+chmod +x FF-Converter-1.1.1-x86_64.AppImage
+./FF-Converter-1.1.1-x86_64.AppImage
 ```
 
 ### Paquete DEB
@@ -42,7 +42,7 @@ chmod +x FF-Converter-1.1.0-x86_64.AppImage
 Abra el `.deb` con el instalador de aplicaciones o ejecute:
 
 ```bash
-sudo apt install ./FF-Converter-1.1.0-amd64.deb
+sudo apt install ./FF-Converter-1.1.1-amd64.deb
 ```
 
 ## Primera conversión
@@ -69,11 +69,11 @@ La aceleración depende de la GPU, sus controladores y los codificadores detecta
 Cada release incluye `SHA256SUMS.txt`.
 
 ```powershell
-Get-FileHash .\FF-Converter-1.1.0-setup-x64.exe -Algorithm SHA256
+Get-FileHash .\FF-Converter-1.1.1-setup-x64.exe -Algorithm SHA256
 ```
 
 ```bash
-sha256sum FF-Converter-1.1.0-x86_64.AppImage
+sha256sum FF-Converter-1.1.1-x86_64.AppImage
 ```
 
 Compare el resultado con el valor publicado.
@@ -82,7 +82,7 @@ Compare el resultado con el valor publicado.
 
 Las conversiones se ejecutan localmente. FF-Converter no necesita subir los archivos a ningún servicio. Los logs ocultan el directorio personal y las credenciales incluidas accidentalmente en URLs.
 
-Si algo falla, revise **Diagnóstico** y **Consola Logs** y luego abra una [issue](https://github.com/wilkinbarban/FF-Converter/issues).
+Si algo falla, revise **Diagnóstico** y **Consola Logs** y luego abra una [issue](https://github.com/wilkin-barban/FF-Converter/issues).
 
 ## Desarrollo
 

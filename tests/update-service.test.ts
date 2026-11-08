@@ -16,7 +16,7 @@ describe('UpdateService', () => {
     const service = new UpdateService({
       updater, appVersion: '1.0.0', isPackaged: true, platform: 'win32', isAppImage: false,
       openExternal, emit, logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() }, delayMs: 0,
-      releaseUrl: 'https://github.com/wilkinbarban/FF-Converter/releases/latest', ...overrides
+      releaseUrl: 'https://github.com/wilkin-barban/FF-Converter/releases/latest', ...overrides
     });
     return { service, updater, listeners, emit, openExternal };
   }

@@ -5,6 +5,8 @@ Gracias por ayudar a mejorar el proyecto. Antes de enviar un cambio, abra una is
 ## Preparación
 
 ```bash
+git clone https://github.com/wilkin-barban/FF-Converter.git
+cd FF-Converter
 npm ci
 npm run verify
 ```

@@ -2,6 +2,15 @@
 
 Versión: __________  Commit: __________  Fecha: __________
 
+## Repositorio y release
+
+- [ ] `git remote -v` apunta a `wilkin-barban/FF-Converter`.
+- [ ] El tag `vX.Y.Z` coincide con la versión de `package.json`.
+- [ ] La release incluye instaladores, `latest.yml`, `latest-linux.yml`, blockmaps y `SHA256SUMS.txt`.
+- [ ] El actualizador apunta a `https://github.com/wilkin-barban/FF-Converter/releases/latest`.
+- [ ] La firma Authenticode del instalador de Windows fue verificada o su ausencia fue aceptada explícitamente.
+
+
 Responsable técnico: __________  Responsable de publicación: __________
 
 ## Fuente y dependencias

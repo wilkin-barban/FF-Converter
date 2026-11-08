@@ -8,13 +8,13 @@
 
 ## Baixar
 
-**[Abrir a versão mais recente](https://github.com/wilkinbarban/FF-Converter/releases/latest)**
+**[Abrir a versão mais recente](https://github.com/wilkin-barban/FF-Converter/releases/latest)**
 
 | Sistema | Arquivo recomendado |
 |---|---|
-| Windows 10/11 x64 | `FF-Converter-1.1.0-setup-x64.exe` |
-| Ubuntu x64, portátil | `FF-Converter-1.1.0-x86_64.AppImage` |
-| Ubuntu/Debian x64 | `FF-Converter-1.1.0-amd64.deb` |
+| Windows 10/11 x64 | `FF-Converter-1.1.1-setup-x64.exe` |
+| Ubuntu x64, portátil | `FF-Converter-1.1.1-x86_64.AppImage` |
+| Ubuntu/Debian x64 | `FF-Converter-1.1.1-amd64.deb` |
 
 FFmpeg e FFprobe já estão incluídos. Não é necessário instalá-los separadamente.
 
@@ -33,8 +33,8 @@ Esta versão pessoal usa um certificado autoassinado. A assinatura protege a int
 Permita executar o arquivo como programa em suas propriedades ou use:
 
 ```bash
-chmod +x FF-Converter-1.1.0-x86_64.AppImage
-./FF-Converter-1.1.0-x86_64.AppImage
+chmod +x FF-Converter-1.1.1-x86_64.AppImage
+./FF-Converter-1.1.1-x86_64.AppImage
 ```
 
 ### Pacote DEB
@@ -42,7 +42,7 @@ chmod +x FF-Converter-1.1.0-x86_64.AppImage
 Abra o `.deb` com o instalador de aplicativos ou execute:
 
 ```bash
-sudo apt install ./FF-Converter-1.1.0-amd64.deb
+sudo apt install ./FF-Converter-1.1.1-amd64.deb
 ```
 
 ## Primeira conversão
@@ -69,11 +69,11 @@ A aceleração depende da GPU, dos drivers e dos codificadores detectados. Quand
 Cada release inclui `SHA256SUMS.txt`.
 
 ```powershell
-Get-FileHash .\FF-Converter-1.1.0-setup-x64.exe -Algorithm SHA256
+Get-FileHash .\FF-Converter-1.1.1-setup-x64.exe -Algorithm SHA256
 ```
 
 ```bash
-sha256sum FF-Converter-1.1.0-x86_64.AppImage
+sha256sum FF-Converter-1.1.1-x86_64.AppImage
 ```
 
 Compare o resultado com o checksum publicado.
@@ -82,7 +82,7 @@ Compare o resultado com o checksum publicado.
 
 As conversões acontecem localmente. O FF-Converter não precisa enviar seus arquivos para nenhum serviço. Os logs ocultam a pasta pessoal e credenciais incluídas acidentalmente em URLs.
 
-Se algo falhar, consulte **Diagnóstico** e **Console de logs** e depois abra uma [issue](https://github.com/wilkinbarban/FF-Converter/issues).
+Se algo falhar, consulte **Diagnóstico** e **Console de logs** e depois abra uma [issue](https://github.com/wilkin-barban/FF-Converter/issues).
 
 ## Desenvolvimento
 

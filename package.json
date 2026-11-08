@@ -1,7 +1,7 @@
 {
   "name": "ff-converter-monorepo",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Cross-platform FFmpeg batch converter and desktop orchestrator",
   "license": "MIT",
   "author": "FF-Converter contributors",
@@ -37,12 +37,12 @@
     "esbuild@0.21.5": true,
     "better-sqlite3@13.0.1": true
   },
-  "homepage": "https://github.com/wilkinbarban/FF-Converter",
+  "homepage": "https://github.com/wilkin-barban/FF-Converter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wilkinbarban/FF-Converter.git"
+    "url": "https://github.com/wilkin-barban/FF-Converter.git"
   },
   "bugs": {
-    "url": "https://github.com/wilkinbarban/FF-Converter/issues"
+    "url": "https://github.com/wilkin-barban/FF-Converter/issues"
   }
 }

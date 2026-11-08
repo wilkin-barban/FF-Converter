@@ -1,5 +1,31 @@
 # Empaquetado y lanzamiento
 
+## Repositorio y versión
+
+El repositorio oficial es https://github.com/wilkin-barban/FF-Converter. El tag de release debe coincidir con la versión de `package.json`; por ejemplo, `v1.1.1` para la versión 1.1.1.
+
+## Publicación local firmada
+
+En Windows, la build local firma con el certificado `CN=FF-Converter Personal Development` del almacén `Cert:\CurrentUser\My`:
+
+```powershell
+npm ci
+npm run verify
+npm run release:preflight
+npm run package --workspace=apps/desktop
+```
+
+En Linux/WSL:
+
+```bash
+scripts/package-linux-wsl.sh <ruta-del-proyecto> <destino-de-artefactos>
+```
+
+## Publicación por CI
+
+El workflow `Release` se dispara con tags `v*`. La firma de Windows en GitHub Actions requiere los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`; si faltan, los artefactos de Windows se generan sin firma. La clave privada del certificado local no es exportable, así que para CI se debe configurar un PFX exportable.
+
+
 ## Flujo reproducible
 
 En una copia limpia del repositorio:
