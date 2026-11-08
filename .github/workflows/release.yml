@@ -136,6 +136,13 @@ jobs:
         with:
           path: release-assets
           merge-multiple: true
+      - name: Generate SHA256SUMS
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd release-assets
+          sha256sum FF-Converter-*.exe FF-Converter-*.AppImage FF-Converter-*.deb > SHA256SUMS.txt
+          cat SHA256SUMS.txt
       - name: Finalize GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
