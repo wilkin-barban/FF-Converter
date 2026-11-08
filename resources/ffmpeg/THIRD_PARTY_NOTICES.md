@@ -27,11 +27,11 @@ la GPLv3 aplicable a estos ejecutables y sus bibliotecas incorporadas.
 
 - Versión: `n8.1.2-31-g8c9502e9b0-20260726`
 - Proveedor: BtbN FFmpeg Builds
-- Paquete: `ffmpeg-n8.1-latest-linux64-gpl-8.1.tar.xz`
-- Descarga: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n8.1-latest-linux64-gpl-8.1.tar.xz
+- Paquete de CI: `ffmpeg-linux64-8.1.2.tar.xz` (reempaquetado reproducible de los binarios BtbN)
+- Descarga: https://github.com/wilkin-barban/FF-Converter/releases/download/ffmpeg-linux64-8.1.2/ffmpeg-linux64-8.1.2.tar.xz
 - Fuente FFmpeg correspondiente: https://github.com/FFmpeg/FFmpeg/commit/8c9502e9b0
 - Scripts/procedencia del build: https://github.com/BtbN/FFmpeg-Builds
-- SHA-256 del paquete: `019D2FC72F111ABB6D228C9C478900B77E4242EE454556F00144AA7777BC7DCD`
+- SHA-256 del paquete: `B8CF0BBFF606926C489E35E8D3A09D3321BB8C6B82D509C169131FD05A030A0B`
 - SHA-256 de `ffmpeg`: `7EE9C2FF37E2365941054C749E8DB9A93AC4F5600222FD1DE475415D1AA4E27A`
 - SHA-256 de `ffprobe`: `47DF6E0FD92E0ED8E21FF8844665E7C665AC197C26F7280DFFF76C3E559198ED`
 

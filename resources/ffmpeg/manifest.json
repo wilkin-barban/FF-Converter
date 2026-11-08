@@ -15,15 +15,15 @@
       }
     },
     "linux-x64": {
-      "version": "n8.1.2-34-g9b6c8969e0-20260801",
+      "version": "n8.1.2-31-g8c9502e9b0-20260726",
       "provider": "BtbN",
-      "archiveUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-08-01-13-21/ffmpeg-n8.1.2-34-g9b6c8969e0-linux64-gpl-8.1.tar.xz",
-      "archiveSha256": "7F44D96CF551AC1D3C8641867EC1676A764B7179ACC35FD39BF17803CDFFE522",
-      "sourceUrl": "https://github.com/FFmpeg/FFmpeg/commit/9b6c8969e0",
+      "archiveUrl": "https://github.com/wilkin-barban/FF-Converter/releases/download/ffmpeg-linux64-8.1.2/ffmpeg-linux64-8.1.2.tar.xz",
+      "archiveSha256": "B8CF0BBFF606926C489E35E8D3A09D3321BB8C6B82D509C169131FD05A030A0B",
+      "sourceUrl": "https://github.com/FFmpeg/FFmpeg/commit/8c9502e9b0",
       "buildScriptsUrl": "https://github.com/BtbN/FFmpeg-Builds",
       "files": {
-        "ffmpeg": "9A5EF39E9125529959392817B52F66AD10CCF9DA30B805EA98AA1DC5594C7D4A",
-        "ffprobe": "2B52567DE2917A23A1D34FF7C360C7ABC8DA3F7C338C1FE29BB2DA5721599F54"
+        "ffmpeg": "7EE9C2FF37E2365941054C749E8DB9A93AC4F5600222FD1DE475415D1AA4E27A",
+        "ffprobe": "47DF6E0FD92E0ED8E21FF8844665E7C665AC197C26F7280DFFF76C3E559198ED"
       }
     }
   }
