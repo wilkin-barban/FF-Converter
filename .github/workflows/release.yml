@@ -47,10 +47,14 @@ jobs:
       - run: npm run verify
       - run: npm run release:preflight
       - name: Configure Windows signing
+        env:
+          CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
         shell: pwsh
         run: |
+          (Get-Content electron-builder.yml) | Where-Object { $_ -notmatch '^\s+certificateSubjectName:' -and $_ -notmatch '^\s+certificateSha1:' } | Set-Content -Path electron-builder.yml -Encoding utf8
           if ($env:CSC_LINK -and $env:CSC_KEY_PASSWORD) {
-            "Windows signing secrets detected; electron-builder will sign the artifacts."
+            "Windows signing secrets detected; using the PFX from secrets."
           } else {
             "No Windows signing secrets configured; building unsigned Windows artifacts."
             "CSC_IDENTITY_AUTO_DISCOVERY=false" | Out-File -FilePath $env:GITHUB_ENV -Append
