@@ -47,7 +47,7 @@ scripts/package-linux-wsl.sh /mnt/c/Users/wilki/proyectos/FF-Converter /mnt/c/Us
 
 ### Publicación por CI
 
-El workflow `Release` se dispara con tags `v*`. La firma de Windows en CI requiere los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`; sin ellos se generan artefactos sin firma. La clave privada del certificado local no es exportable, por lo que no puede reutilizarse directamente en CI.
+El workflow `Release` se dispara con tags `v*`. La firma de Windows en CI usa los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`, configurados con el certificado CI exportable `E1662767...` (`build/certificates/FF-Converter-Personal-Development-CI.cer`). La release `v1.1.1` se firmó localmente con el certificado no exportable `12A84C...`; las releases futuras construidas por CI usan el certificado CI.
 
 ## Verificación
 

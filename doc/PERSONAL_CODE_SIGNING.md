@@ -54,6 +54,20 @@ Remove-Item "Cert:\CurrentUser\My\$thumbprint"
 Al eliminar `CurrentUser\My` se destruye la única clave privada y las futuras
 versiones no podrán firmarse con esta misma identidad.
 
+## Certificado de CI (exportable)
+
+GitHub Actions usa un segundo certificado con el mismo sujeto, creado con clave privada exportable y EKU Code Signing:
+
+- Sujeto: `CN=FF-Converter Personal Development`
+- Thumbprint: `E1662767EF188988629A4A37F261D3663BBE301F`
+- Vencimiento: 2029-08-01
+- Copia pública: `build/certificates/FF-Converter-Personal-Development-CI.cer`
+- Secretos configurados en el repositorio: `WIN_CSC_LINK` (PFX en base64) y `WIN_CSC_KEY_PASSWORD`.
+
+El workflow `Release` firma con este certificado cuando los secretos están presentes. Las builds locales siguen usando el certificado `12A84C...` del almacén personal. La release `v1.1.1` quedó firmada con el certificado local; las releases futuras construidas por CI usarán el certificado CI.
+
+Para confiar en el certificado CI en un equipo Windows, importar el `.cer` en `TrustedPublisher` y, si se requiere confianza de cadena, en `Root`. En este equipo ya está importado en `TrustedPublisher`.
+
 ## Integración continua
 
-La clave privada de este certificado es no exportable. Para que GitHub Actions firme instaladores, el repositorio debe tener los secretos `WIN_CSC_LINK` (PFX en base64) y `WIN_CSC_KEY_PASSWORD`. Si faltan, el workflow genera artefactos sin firma y no se deben presentar como firmados.
+Los secretos `WIN_CSC_LINK` (PFX en base64) y `WIN_CSC_KEY_PASSWORD` ya están configurados con el certificado CI exportable. Si se eliminan, el workflow genera artefactos sin firma y no se deben presentar como firmados.

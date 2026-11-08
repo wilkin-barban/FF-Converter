@@ -23,7 +23,7 @@ scripts/package-linux-wsl.sh <ruta-del-proyecto> <destino-de-artefactos>
 
 ## Publicación por CI
 
-El workflow `Release` se dispara con tags `v*`. La firma de Windows en GitHub Actions requiere los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`; si faltan, los artefactos de Windows se generan sin firma. La clave privada del certificado local no es exportable, así que para CI se debe configurar un PFX exportable.
+El workflow `Release` se dispara con tags `v*`. La firma de Windows en GitHub Actions usa los secretos `WIN_CSC_LINK` y `WIN_CSC_KEY_PASSWORD`, ya configurados con el certificado CI exportable (`build/certificates/FF-Converter-Personal-Development-CI.cer`). Si los secretos faltan, los artefactos de Windows se generan sin firma. La release `v1.1.1` se firmó localmente con el certificado no exportable `12A84C...`; las releases futuras construidas por CI usan el certificado CI `E166...`.
 
 
 ## Flujo reproducible
@@ -95,4 +95,4 @@ repositorio.
 
 En instaladores Windows y AppImage, FF-Converter busca actualizaciones después de abrir la ventana principal. Nunca descarga sin confirmación: la persona usuaria elige cuándo descargar y reiniciar. Las instalaciones DEB no se actualizan solas; el botón abre exactamente la página oficial de la versión más reciente para descargar el paquete correspondiente.
 
-Las publicaciones deben incluir los metadatos de actualización que genera electron-builder junto con el instalador NSIS, sus blockmaps y los archivos AppImage/DEB.
+Las publicaciones deben incluir los metadatos de actualización que genera electron-builder junto con el instalador NSIS, sus blockmaps y los archivos AppImage/DEB.
