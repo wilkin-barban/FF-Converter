@@ -22,9 +22,11 @@ Si venís de `1.1.0`, descargá `1.1.1` manualmente una vez: el actualizador de 
 
 ## Verificación
 
-- Se ejecutaron `npm run verify` y `npm run release:preflight`.
-- El instalador de Windows tiene firma Authenticode válida en este equipo.
+- Se ejecutaron `npm run verify` (73 tests) y `npm run release:preflight`.
+- Se aprobaron `npm run test:packaged` sobre `win-unpacked` y la matriz de aceptación con FFmpeg bundled (H.264, H.265, AAC).
+- El instalador de Windows tiene firma Authenticode válida con el certificado personal documentado.
 - La release incluye `SHA256SUMS.txt` para verificar las descargas.
+- El workflow CI del repositorio nuevo terminó en verde.
 
 ## Notes in English
 

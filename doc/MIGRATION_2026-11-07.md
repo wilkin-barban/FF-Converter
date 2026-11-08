@@ -51,11 +51,13 @@ El workflow `Release` se dispara con tags `v*`. La firma de Windows en CI requie
 
 ## Verificación
 
-- `npm run verify`
-- `npm run release:preflight`
-- Firma Authenticode del instalador de Windows.
+- `npm run verify` (73 tests).
+- `npm run release:preflight`.
+- `npm run test:packaged` sobre `win-unpacked`.
+- `npm run test:acceptance -- resources/ffmpeg/win32-x64` (H.264, H.265, AAC).
+- Firma Authenticode del instalador de Windows con el certificado documentado.
 - `SHA256SUMS.txt` adjunto a la release.
-- Instalación/actualización manual verificada sobre `1.1.1`.
+- Workflow CI del repositorio nuevo en verde.
 
 ## Rollback
 
