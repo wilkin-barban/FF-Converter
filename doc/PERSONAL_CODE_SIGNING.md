@@ -71,3 +71,6 @@ Para confiar en el certificado CI en un equipo Windows, importar el `.cer` en `T
 ## Integración continua
 
 Los secretos `WIN_CSC_LINK` (PFX en base64) y `WIN_CSC_KEY_PASSWORD` ya están configurados con el certificado CI exportable. Si se eliminan, el workflow genera artefactos sin firma y no se deben presentar como firmados.
+
+- Validación: el `workflow_dispatch` del 2026-11-08 (run `42433639116`) firmó Windows con `E1662767...` y construyó Linux con el archivo FFmpeg alojado en la pre-release `ffmpeg-linux64-8.1.2`.
+- En un equipo sin el certificado CI en el almacén `Root`, `Get-AuthenticodeSignature` puede mostrar `UnknownError` aunque la firma exista. Importar `FF-Converter-Personal-Development-CI.cer` en `TrustedPublisher` y `Root` para obtener `Valid`.
