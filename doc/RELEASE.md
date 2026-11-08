@@ -95,4 +95,4 @@ repositorio.
 
 En instaladores Windows y AppImage, FF-Converter busca actualizaciones después de abrir la ventana principal. Nunca descarga sin confirmación: la persona usuaria elige cuándo descargar y reiniciar. Las instalaciones DEB no se actualizan solas; el botón abre exactamente la página oficial de la versión más reciente para descargar el paquete correspondiente.
 
-Las publicaciones deben incluir los metadatos de actualización que genera electron-builder junto con el instalador NSIS, sus blockmaps y los archivos AppImage/DEB.
+Las publicaciones deben incluir los metadatos de actualización que genera electron-builder junto con el instalador NSIS, sus blockmaps y los archivos AppImage/DEB.
