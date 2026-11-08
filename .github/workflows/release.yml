@@ -149,6 +149,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          rm -f release-assets/builder-debug.yml
           notes="doc/RELEASE_NOTES_${GITHUB_REF_NAME}.md"
           gh release upload "${GITHUB_REF_NAME}" release-assets/* --repo "${GITHUB_REPOSITORY}" --clobber
           if [[ -f "$notes" ]]; then
